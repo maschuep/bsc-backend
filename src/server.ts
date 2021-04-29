@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import { MeasurementController } from './controllers/measurement.controller';
-import { TestController } from './controllers/test.controller';
 import { Measurement } from './models/measurement.model';
 import { ServerService } from './services/server.service';
 import { StorageService } from './services/storage.service';
@@ -16,7 +15,7 @@ export class Server {
         dotenv.config();
         this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
-        this._server = ServerService.create([TestController]);
+        this._server = ServerService.create([new MeasurementController()]);
         this._storage = StorageService.create([Measurement.initialize]);
 
 

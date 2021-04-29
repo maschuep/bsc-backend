@@ -1,10 +1,10 @@
 import express, { Request, Response, Router } from 'express';
-import { Controller } from '../interfaces/controller.abstract';
 import { ControllersObject } from '../interfaces/controllers-object.interface';
+import { ControllerFactory } from '../interfaces/controller-factory.interface';
 import { Measurement } from '../models/measurement.model';
 
 
-export class MeasurementController implements Controller {
+export class MeasurementController implements ControllerFactory {
 
     _router: Router;
     _path: string;
@@ -12,6 +12,7 @@ export class MeasurementController implements Controller {
     constructor() {
         this._router = express.Router();
         this._path = 'measurement';
+        this.create();
     }
 
     public create() {
@@ -20,11 +21,7 @@ export class MeasurementController implements Controller {
         });
     }
 
-    public read() { }
-    public update() { }
-    public delete() { }
-
-    public controller(): ControllersObject {
+    public getPathAndRouter(): ControllersObject {
         return { path: this._path, controller: this._router };
     }
 }
