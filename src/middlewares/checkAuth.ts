@@ -5,7 +5,6 @@ import { Request, Response } from 'express';
 export function verifyToken(req: Request, res: Response, next: any) {
     let token: string;
     try {
-        // get secret key from environment (defined in nodemon.json)
         const secret = process.env.JWT_SECRET;
         // since the Authorizationheader consists of "Bearer <token>" where <token> is a JWT token
         token = req.headers.authorization.split(' ')[1];
@@ -15,6 +14,23 @@ export function verifyToken(req: Request, res: Response, next: any) {
             res.status(403).send({ message: 'Unauthorized' });
         }
         // adds the field "tokenPayload" to the request enabling following functions to use data from the token
+        req.body.tokenPayload = decoded;
+        next();
+    } catch (err) {
+        res.status(403).send({ message: 'Unauthorized' });
+    }
+}
+
+export function authenticateMeasruements(req: Request, res: Response, next: (...args: any[]) => any) {
+    let token: string;
+    try {
+        const secret = process.env.JWT_STATION_SECRET;
+        // since the Authorizationheader consists of "Bearer <token>" where <token> is a JWT token
+        token = req.headers.authorization.split(' ')[1];
+        const decoded: any = jwt.verify(token, secret);
+        if (decoded == null) {
+            res.status(403).send({ message: 'Unauthorized' });
+        }
         req.body.tokenPayload = decoded;
         next();
     } catch (err) {

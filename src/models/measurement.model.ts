@@ -15,10 +15,10 @@ export class Measurement extends Model<MeasurementAttributes, MeasurementAttribu
     timestamp: number;
     blinkDuration: number;
 
-    static initialize(sequelize: Sequelize): void {
+    public static initialize(sequelize: Sequelize): void {
         Measurement.init({
-            participant: { type: DataTypes.STRING, primaryKey: true },
-            timestamp: { type: DataTypes.INTEGER, primaryKey: true },
+            participant: { type: DataTypes.STRING, unique: 'primary' },
+            timestamp: { type: DataTypes.INTEGER, unique: 'primary' },
             blinkDuration: { type: DataTypes.INTEGER }
         }, { sequelize, timestamps: false });
     }

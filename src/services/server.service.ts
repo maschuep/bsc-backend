@@ -4,18 +4,13 @@ import { ControllerFactory } from '../interfaces/controller-factory.interface';
 
 export class ServerService {
 
-    constructor() {
+    private _express: Application;
+
+    constructor(controllers: ControllerFactory[]) {
         this._express = express()
             .use(express.json())
             .use(morgan('tiny'));
-    }
-
-    private _express: Application;
-
-    public static create(controllers?: ControllerFactory[]): ServerService {
-        const s = new ServerService();
-        if (controllers) { s.use(controllers); }
-        return s;
+            if (controllers) { this.use(controllers); }
     }
 
     public use(controllers: ControllerFactory[]) {

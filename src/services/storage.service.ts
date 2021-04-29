@@ -1,25 +1,20 @@
 import { Sequelize } from 'sequelize';
 export class StorageService {
 
-    constructor() {
+    private _sequelize: Sequelize;
+
+    constructor(modelFn?: ((s: Sequelize) => void)[]) {
         this._sequelize = new Sequelize({
             dialect: 'sqlite',
             storage: 'storage.db',
             logging: false // can be set to true for debugging
         });
 
+        if (modelFn) { this.initModels(modelFn); }
         this._sequelize.sync().catch(err => console.log(err));
     }
 
-    private _sequelize: Sequelize;
-
-    public static create(modelFn?: ((sequelize: Sequelize) => void)[]) {
-        const s = new StorageService();
-        if (modelFn) { s.initModels(modelFn); }
-        return new StorageService();
-    }
-
-    initModels(modelFn: ((sequelize: Sequelize) => void)[]) {
+    public initModels(modelFn: ((s: Sequelize) => void)[]) {
         modelFn.forEach(m => m(this._sequelize));
     }
 }

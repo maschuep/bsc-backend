@@ -15,8 +15,8 @@ export class Server {
         dotenv.config();
         this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
-        this._server = ServerService.create([new MeasurementController()]);
-        this._storage = StorageService.create([Measurement.initialize]);
+        this._server = new ServerService([new MeasurementController()]);
+        this._storage = new StorageService([Measurement.initialize]);
 
 
 
