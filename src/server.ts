@@ -1,46 +1,28 @@
-import express, { Application } from 'express';
-import morgan from 'morgan';
-import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv';
-
+import { MeasurementController } from './controllers/measurement.controller';
+import { TestController } from './controllers/test.controller';
+import { Measurement } from './models/measurement.model';
+import { ServerService } from './services/server.service';
+import { StorageService } from './services/storage.service';
 
 export class Server {
-    private server: Application;
-    private sequelize: Sequelize;
-    private port = process.env.PORT || 3001;
+
+    private _server: ServerService;
+    private _storage: StorageService;
+    private _port: number;
 
     constructor() {
 
         dotenv.config();
+        this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
-        this.server = this.configureServer();
-        this.sequelize = this.configureSequelize();
+        this._server = ServerService.create([TestController]);
+        this._storage = StorageService.create([Measurement.initialize]);
 
-        this.sequelize.sync()
-        .then(() => {                           // create connection to the database
-            this.server.listen(this.port, () => {                                   // start server on specified port
-                console.log(`server listening at http://localhost:${this.port}`);   // indicate that the server has started
-            });
-        })
-        .catch(err =>
-            console.log(err)
-        );
-    }
 
-    private configureServer(): Application {
-        return express()
-            .use(express.json())                    // parses an incoming json to an object
-            .use(morgan('tiny'))                    // logs incoming requests
-            .get('/', (req, res) => res.send('<h1>Backend is running<span style="font-size:50px">&#127881;</span></h1>'));
-    }
 
-    private configureSequelize(): Sequelize {
-        return new Sequelize({
-            dialect: 'sqlite',
-            storage: 'db.sqlite',
-            logging: false // can be set to true for debugging
-        });
+        this._server.listen(this._port, () => console.log(`server listening at http://localhost:${this._port}`));
     }
 }
 
-const server = new Server(); // starts the server
+const server = new Server();
