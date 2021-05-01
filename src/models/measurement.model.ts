@@ -20,6 +20,6 @@ export class Measurement extends Model<MeasurementAttributes, MeasurementAttribu
             participant: { type: DataTypes.STRING, unique: 'primary' },
             timestamp: { type: DataTypes.INTEGER, unique: 'primary' },
             blinkDuration: { type: DataTypes.INTEGER }
-        }, { sequelize, timestamps: false });
+        }, { sequelize, timestamps: false, tableName:'measurements'});
     }
 }
