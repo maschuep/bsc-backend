@@ -18,8 +18,13 @@ export class MeasurementController implements ControllerFactory {
 
     public create() {
         this._router.post('/:participant', authenticateMeasruements, (req: Request, res: Response) => {
-            const ms = req.body.map((a: MeasurementAttributes) => {a.participant = req.params.participant; return a; });
-            Measurement.bulkCreate(ms).then(() => res.status(201).send()).catch(err => {console.log(err); res.status(500); });
+            const ms = req.body.map((a: MeasurementAttributes) => { a.participant = req.params.participant; return a; });
+            Measurement.bulkCreate(ms)
+                .then(() => res.status(201).send())
+                .catch(err => {
+                    console.log(err);
+                    res.status(500);
+                });
         });
     }
 

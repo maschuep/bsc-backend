@@ -11,7 +11,7 @@ export class StorageService {
         });
 
         if (modelFn) { this.initModels(modelFn); }
-        this._sequelize.sync({alter:true}).catch(err => console.log(err));
+        this._sequelize.sync({alter: true}).catch(err => console.log(err));
     }
 
     public initModels(modelFn: ((s: Sequelize) => void)[]) {

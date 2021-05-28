@@ -3,3 +3,4 @@ build
 .env
 package_lock
 db.sqlite
+storage.db
