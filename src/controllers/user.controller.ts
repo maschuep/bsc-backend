@@ -16,6 +16,7 @@ export class UserController implements ControllerFactory {
         this._router = express.Router();
         this._path = '/user';
         this.login();
+        this.register();
     }
 
     public getPathAndRouter(): ControllersObject {
