@@ -1,0 +1,34 @@
+
+> bsc-backend@1.0.0 prestart
+> npm run build
+
+
+> bsc-backend@1.0.0 prebuild
+> tslint -c tslint.json -p tsconfig.json --fix
+
+
+> bsc-backend@1.0.0 build
+> tsc
+
+
+> bsc-backend@1.0.0 start
+> node .
+
+server listening at http://localhost:3002
+
+> bsc-backend@1.0.0 prestart
+> npm run build
+
+
+> bsc-backend@1.0.0 prebuild
+> tslint -c tslint.json -p tsconfig.json --fix
+
+
+> bsc-backend@1.0.0 build
+> tsc
+
+
+> bsc-backend@1.0.0 start
+> node .
+
+server listening at http://localhost:3002

@@ -4,3 +4,4 @@ build
 package_lock
 db.sqlite
 storage.db
+*.log*

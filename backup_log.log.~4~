@@ -1,0 +1,13 @@
+
+> bsc-backend@1.0.0 prestart
+> npm run build
+
+
+> bsc-backend@1.0.0 prebuild
+> tslint -c tslint.json -p tsconfig.json --fix
+
+
+> bsc-backend@1.0.0 build
+> tsc
+
+src/controllers/user.controller.ts(5,20): error TS2307: Cannot find module 'bcrypt' or its corresponding type declarations.
