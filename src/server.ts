@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { MeasurementController } from './controllers/measurement.controller';
 import { UserController } from './controllers/user.controller';
 import { Measurement } from './models/measurement.model';
+import { User } from './models/user.model';
 import { ServerService } from './services/server.service';
 import { StorageService } from './services/storage.service';
 
@@ -17,7 +18,7 @@ export class Server {
         this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
         this._server = new ServerService([new MeasurementController(), new UserController()]);
-        this._storage = new StorageService([Measurement.initialize]);
+        this._storage = new StorageService([Measurement.initialize, User.initialize]);
 
 
 
