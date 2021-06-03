@@ -4,7 +4,6 @@ import { ControllersObject } from '../interfaces/controllers-object.interface';
 import { User, UserAttributes } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { userInfo } from 'node:os';
 
 export class UserController implements ControllerFactory {
 
