@@ -1,9 +1,10 @@
 import express, { Request, Response, Router } from 'express';
 import { ControllerFactory } from '../interfaces/controller-factory.interface';
 import { ControllersObject } from '../interfaces/controllers-object.interface';
-import { User } from '../models/user.model';
+import { User, UserAttributes } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { userInfo } from 'node:os';
 
 export class UserController implements ControllerFactory {
 
@@ -39,6 +40,15 @@ export class UserController implements ControllerFactory {
                 return res.status(500).send({ message: err });
             });
         });
+    }
+
+    public register(){
+        this._router.post('/register', (req, res) => {
+            const saltRounds = 12;
+            const user: UserAttributes = req.body;
+            user.password = bcrypt.hashSync(user.password, saltRounds);
+            User.create(user).then(u=>res.status(201).send(u)).catch(err => res.status(500).send(err))
+        })
     }
 
 }
