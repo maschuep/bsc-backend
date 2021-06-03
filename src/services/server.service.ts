@@ -11,7 +11,7 @@ export class ServerService {
                 .use(express.json())
                 .use((req, res, next) => {
                     res.header('Access-Control-Allow-Origin', '*');
-                    res.header('Access-Control-Allow-Header', '*');
+                    res.header('Access-Control-Allow-Headers', '*');
                     next();
                 } )
             .use(morgan('tiny'));
