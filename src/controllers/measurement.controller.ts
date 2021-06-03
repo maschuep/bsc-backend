@@ -7,13 +7,16 @@ import { authenticateMeasruements } from '../middlewares/checkAuth';
 
 export class MeasurementController implements ControllerFactory {
 
-    _router: Router;
     _path: string;
 
-    constructor() {
-        this._router = express.Router();
+    constructor(private _router: Router) {
         this._path = '/measurement';
         this.create();
+        this.test();
+    }
+
+    public test() {
+        this._router.get('/', (req, res) => res.status(200).send('yess'));
     }
 
     public create() {

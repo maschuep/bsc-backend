@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv';
+import express, {Router} from 'express';
 import { MeasurementController } from './controllers/measurement.controller';
+import { UserController } from './controllers/user.controller';
 import { Measurement } from './models/measurement.model';
 import { ServerService } from './services/server.service';
 import { StorageService } from './services/storage.service';
@@ -12,10 +14,11 @@ export class Server {
 
     constructor() {
 
+        const router = express.Router();
         dotenv.config();
         this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
-        this._server = new ServerService([new MeasurementController()]);
+        this._server = new ServerService([new MeasurementController(router), new UserController(router)]);
         this._storage = new StorageService([Measurement.initialize]);
 
 
