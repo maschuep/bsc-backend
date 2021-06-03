@@ -8,8 +8,11 @@ export class ServerService {
 
     constructor(controllers: ControllerFactory[]) {
         this._express = express()
-            .use(express.json())
-            .use((req, res) => res.header('Access-Control-Allow-Origin', '*'))
+                .use(express.json())
+                .use((req, res, next) => {
+                    res.header('Access-Control-Allow-Origin', '*');
+                    next();
+                } )
             .use(morgan('tiny'));
             if (controllers) { this.use(controllers); }
     }

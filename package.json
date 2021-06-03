@@ -25,6 +25,7 @@
     "@types/express": "^4.17.11",
     "@types/morgan": "^1.9.2",
     "@types/node": "^15.0.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -33,6 +34,7 @@
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/sequelize": "^4.28.9",
     "@types/validator": "^13.1.3",
