@@ -42,13 +42,13 @@ export class UserController implements ControllerFactory {
         });
     }
 
-    public register(){
+    public register() {
         this._router.post('/register', (req, res) => {
             const saltRounds = 12;
             const user: UserAttributes = req.body;
             user.password = bcrypt.hashSync(user.password, saltRounds);
-            User.create(user).then(u=>res.status(201).send(u)).catch(err => res.status(500).send(err))
-        })
+            User.create(user).then(u => res.status(201).send(u)).catch(err => res.status(500).send(err));
+        });
     }
 
 }

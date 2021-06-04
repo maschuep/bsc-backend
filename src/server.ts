@@ -20,8 +20,6 @@ export class Server {
         this._server = new ServerService([new MeasurementController(), new UserController()]);
         this._storage = new StorageService([Measurement.initialize, User.initialize]);
 
-
-
         this._server.listen(this._port, () => console.log(`server listening at http://localhost:${this._port}`));
     }
 }
