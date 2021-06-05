@@ -4,4 +4,8 @@ build
 package_lock
 db.sqlite
 storage.db
+<<<<<<< HEAD
+*.log*
+=======
 package-lock.json
+>>>>>>> 3a78d627b42c1fc85a0798a7b833928b692bb1d9
