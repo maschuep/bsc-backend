@@ -26,11 +26,15 @@ export class UserController implements ControllerFactory {
         this._router.post('/login', (req: Request, res: Response) => {
             const secret = process.env.JWT_SECRET;
             User.findOne({
-                where: {mail: req.body.mail}
-            }).then( user => {
+                where: { mail: req.body.mail }
+            }).then(user => {
                 if (bcrypt.compareSync(req.body.password, user.password)) {// compares the hash with the password from the lognin request
-                    const token: string = jwt.sign({ userName: user.mail, userId: user.userId }, secret, { expiresIn: '2h' });
-                    return res.status(200).send({ userName: user.mail, userId: user.userId, token });
+                    const token: string = jwt.sign(
+                        { participant: user.participant, mail: user.mail, userId: user.userId },
+                        secret,
+                        { expiresIn: '2h' }
+                    );
+                    return res.status(200).send({ participant: user.participant, mail: user.mail, userId: user.userId, token });
                 } else {
                     return res.status(403).send({ message: 'not authorized' });
                 }

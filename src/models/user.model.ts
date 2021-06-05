@@ -7,6 +7,8 @@ export interface UserAttributes {
     firstname: string;
     lastname: string;
     lastLogin: number;
+    phone: number;
+    participant: string;
 }
 
 
@@ -17,6 +19,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
     firstname: string;
     lastname: string;
     lastLogin: number;
+    phone: number;
+    participant: string;
 
     public static initialize(sequelize: Sequelize): void {
         User.init({userId: {
@@ -43,6 +47,15 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
         lastLogin: {
             type: DataTypes.NUMBER,
             allowNull: false
+        },
+        phone: {
+            type: DataTypes.NUMBER,
+            allowNull: true,
+        },
+        participant: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'unknown'
         }
     },
         {
