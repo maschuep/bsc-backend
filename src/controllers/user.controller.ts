@@ -41,7 +41,7 @@ export class UserController implements ControllerFactory {
             }
             ).catch(err => {
                 console.log(err);
-                return res.status(500).send({ message: err });
+                return res.status(500).send();
             });
         });
     }

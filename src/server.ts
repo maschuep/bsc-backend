@@ -16,6 +16,7 @@ export class Server {
     constructor() {
 
         dotenv.config();
+
         this._port = Number.parseInt(process.env.PORT, 10) || 3001;
 
         this._server = new ServerService([new MeasurementController(), new UserController(), new OverviewController()]);
