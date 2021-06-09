@@ -18,7 +18,7 @@ export class OverviewController implements ControllerFactory {
     }
 
     latestMeasurement() {
-        this._router.get('/latest/:participant', (req: Request, res: Response) => {
+        this._router.get('/latest/:participant', verifyToken, (req: Request, res: Response) => {
             SessionService.trackSession(req.body.tokenPayload.session)
             const participant = req.params.participant;
             Measurement.sequelize
