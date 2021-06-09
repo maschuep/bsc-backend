@@ -16,14 +16,28 @@ export class MeasurementController implements ControllerFactory {
         this._path = '/measurement';
         this.create();
         this.info();
+        this.participants();
     }
 
     public info() {
         this._router.get('/info', (req: Request, res: Response) => {
-           Measurement.sequelize
-           .query('select participant, wh, max(timestamp) as timestamp from measurements group by participant;',
-           { type: QueryTypes.SELECT })
-           .then(all => res.status(200).send(all));
+            Measurement.sequelize
+                .query('select participant, wh, max(timestamp) as timestamp from measurements group by participant;',
+                    { type: QueryTypes.SELECT })
+                .then(all => res.status(200).send(all));
+        });
+    }
+
+    public participants() {
+        this._router.get('/participants', (req: Request, res: Response) => {
+            Measurement.sequelize
+                .query('select distinct participant from measurements;', { type: QueryTypes.SELECT })
+                .then((all: Measurement[]) => res.status(200)
+                    .send(all.reduce((acc, curr) => {
+                        acc.push(curr.participant);
+                        return acc;
+                    },
+                        [])));
         });
     }
 
