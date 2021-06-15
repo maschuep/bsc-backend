@@ -19,7 +19,7 @@ export class OverviewController implements ControllerFactory {
 
     latestMeasurement() {
         this._router.get('/latest/:participant', verifyToken, (req: Request, res: Response) => {
-            SessionService.trackSession(req.body.tokenPayload.session)
+            SessionService.trackSession(req.body.tokenPayload.session);
             const participant = req.params.participant;
             Measurement.sequelize
             .query(`select wh, max(timestamp) from measurements where participant = '${participant}'`, {type: QueryTypes.SELECT})
@@ -44,7 +44,7 @@ export class OverviewController implements ControllerFactory {
         const lastSunday = Date.now() - ((Date.now() - 1000 * 60 * 60 * 24 * 4) % (1000 * 60 * 60 * 24 * 7));
         this._router.get('/lastweek/:participant', verifyToken, (req: Request, res: Response) => {
             SessionService.trackSession(req.body.tokenPayload.session);
-            this.getBiggerThanTimestamp(lastSunday).then(lw => res.status(200).send(lw))
+            this.getBiggerThanTimestamp(lastSunday, req.params.participant).then(lw => res.status(200).send(lw))
             .catch(err => res.status(500).send());
         });
     }
@@ -53,17 +53,18 @@ export class OverviewController implements ControllerFactory {
         const lastDayStart = Date.now() - ((Date.now() - 1000 * 60 * 60 * 24 ) % (1000 * 60 * 60 * 24));
         this._router.get('/lastday/:participant', verifyToken, (req: Request, res: Response) => {
             SessionService.trackSession(req.body.tokenPayload.session);
-            this.getBiggerThanTimestamp(lastDayStart).then(lw => res.status(200).send(lw))
+            this.getBiggerThanTimestamp(lastDayStart, req.params.participant).then(lw => res.status(200).send(lw))
             .catch(err => res.status(500).send());
         });
     }
 
-    private getBiggerThanTimestamp(ts: number) {
+    private getBiggerThanTimestamp(ts: number, participant: string) {
         return Measurement.findAll({
                 where: {
                     timestamp: {
                         [Op.gte]: ts
-                    }
+                    },
+                    participant: participant
                 }
             });
 
