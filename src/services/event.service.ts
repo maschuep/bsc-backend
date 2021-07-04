@@ -56,7 +56,7 @@ export class EventService {
 
                                 if (/*u.active &&*/ u.lastNotification < Date.now() - backofftimeSMS) {
                                     u.lastNotification = Date.now();
-                                    u.save();
+                                    u.update(u)
 
                                     // send link Session
                                     // problem is the sending, because the encoding changes
