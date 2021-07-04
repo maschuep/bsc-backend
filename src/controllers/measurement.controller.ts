@@ -4,6 +4,7 @@ import { ControllerFactory } from '../interfaces/controller-factory.interface';
 import { Measurement, MeasurementAttributes } from '../models/measurement.model';
 import { authenticateMeasruements } from '../middlewares/checkAuth';
 import sequelize, { QueryTypes } from 'sequelize';
+import { EventService } from '../services/event.service';
 
 
 export class MeasurementController implements ControllerFactory {
@@ -24,6 +25,7 @@ export class MeasurementController implements ControllerFactory {
             Measurement.sequelize
                 .query('select participant, wh, max(timestamp) as timestamp from measurements group by participant;',
                     { type: QueryTypes.SELECT })
+                .then(all => all.map((a: any) => {a.date = new Date(a.timestamp); return a; }))
                 .then(all => res.status(200).send(all));
         });
     }
@@ -46,7 +48,13 @@ export class MeasurementController implements ControllerFactory {
             const ms = req.body.map((a: MeasurementAttributes) => { a.participant = req.params.participant; return a; });
 
             Measurement.bulkCreate(ms)
-                .then((a) => res.status(201).send())
+                .then((a) => {
+                    res.status(201).send();
+
+                    Measurement.findAll({ where: { participant: req.params.participant } }).then(all => {
+                        EventService.createEventAndNotify(all, req.params.participant);
+                    });
+                })
                 .catch(err => {
                     console.log(err);
                     res.status(500);

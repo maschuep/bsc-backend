@@ -29,7 +29,7 @@ implements SessionAttributes {
             },
             timestamp: {
                 type: DataTypes.INTEGER,
-                allowNull: false
+                allowNull: true
             },
             duration: {
                 type: DataTypes.INTEGER,

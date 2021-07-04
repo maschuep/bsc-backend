@@ -4,22 +4,23 @@ export interface UserAttributes {
     userId: number;
     mail: string;
     password: string;
-    phone: number;
+    phone: string;
     participant: string;
-    receive_sms: boolean;
-    receive_mail: boolean;
-    active_participation: boolean;
+    active: boolean;
+    lastNotification: number;
+
 }
 
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
     userId: number;
     mail: string;
     password: string;
-    phone: number;
+    phone: string;
     participant: string;
-    active_participation: boolean;
-    receive_mail: boolean;
-    receive_sms: boolean;
+    active: boolean;
+    lastNotification: number;
+
+
 
     public static initialize(sequelize: Sequelize): void {
         User.init({
@@ -37,7 +38,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
                 allowNull: false
             },
             phone: {
-                type: DataTypes.NUMBER,
+                type: DataTypes.STRING,
                 allowNull: true,
             },
             participant: {
@@ -45,20 +46,15 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
                 allowNull: false,
                 defaultValue: 'unknown'
             },
-            active_participation: {
+            active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
-                defaultValue: 'false'
+                defaultValue: 'true'
             },
-            receive_mail: {
-                type: DataTypes.BOOLEAN,
+            lastNotification: {
+                type: DataTypes.NUMBER,
                 allowNull: false,
-                defaultValue: 'false'
-            },
-            receive_sms: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: 'false'
+                defaultValue: 0
             }
         },
             {

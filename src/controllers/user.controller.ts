@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { SessionAttributes } from '../models/session.model';
 import { Session } from '../models/session.model';
 import { verifyToken } from '../middlewares/checkAuth';
+import { TokenService } from '../services/token.service';
 
 export class UserController implements ControllerFactory {
 
@@ -20,6 +21,7 @@ export class UserController implements ControllerFactory {
         this.register();
         this.session();
         this.mailExists();
+        this.getProfile();
     }
 
     public getPathAndRouter(): ControllersObject {
@@ -27,12 +29,12 @@ export class UserController implements ControllerFactory {
     }
 
     public mailExists() {
-        this._router.get('/exists/:mail', (req: Request, res: Response ) => {
-            User.findOne({where: {mail: req.params.mail}}).then(f => {
+        this._router.get('/exists/:mail', (req: Request, res: Response) => {
+            User.findOne({ where: { mail: req.params.mail } }).then(f => {
                 if (f) {
-                    res.status(202).send({message: 'exists'});
+                    res.status(202).send({ message: 'exists' });
                 } else {
-                    res.status(203).send({message: 'does not exist'});
+                    res.status(203).send({ message: 'does not exist' });
                 }
             }).catch(err => {
                 console.log(err);
@@ -54,7 +56,7 @@ export class UserController implements ControllerFactory {
                                 participant: user.participant,
                                 mail: user.mail,
                                 userId: user.userId,
-                                token: this.createToken(user, session)
+                                token: TokenService.create({ mail: user.mail, participant: user.participant, userId: user.userId, session })
                             })
                         ).catch(err => res.status(500));
                 } else {
@@ -72,16 +74,41 @@ export class UserController implements ControllerFactory {
         this._router.get('/session', verifyToken, (req, res) => {
             const session = req.body.tokenPayload;
             Session.findOne(session.sessionId)
-            .then(s => {
-                console.log(s);
-                s.duration = Date.now();
-                s.save();
-                res.status(200).send();
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).send();
-            });
+                .then(s => {
+                    console.log(s);
+                    s.duration = Date.now();
+                    s.save();
+                    res.status(200).send();
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send();
+                });
+        });
+    }
+
+    public getProfile() {
+        this._router.get('/', verifyToken, (req, res) => {
+            User.findByPk(req.body.tokenPayload.userId)
+                .then(u => {
+                    u.password = '';
+                    res.status(200).send(u);
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send();
+                });
+        });
+    }
+
+    public updateProfile() {
+        this._router.patch('/', verifyToken, (req, res) => {
+            User.findByPk(req.body.tokenPayload)
+                .then(found => found.update(req.body).then(f => res.status(200).send()))
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send();
+                });
         });
     }
 
@@ -89,7 +116,6 @@ export class UserController implements ControllerFactory {
         this._router.post('/register', (req, res) => {
             const saltRounds = 12;
             const user: UserAttributes = req.body;
-            console.log(user);
             user.password = bcrypt.hashSync(user.password, saltRounds);
             User.create(user)
                 .then(u => {
@@ -100,8 +126,6 @@ export class UserController implements ControllerFactory {
                 .catch(err => res.status(500).send(err));
         });
     }
-
-
 
     private createToken(user: UserAttributes, session: SessionAttributes): string {
         const secret = process.env.JWT_SECRET;
