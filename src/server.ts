@@ -39,11 +39,6 @@ export class Server {
         // NotificationService.send({message: 'Hallo\n Welt', number: '0786447590', flash: false});
 
 
-        Measurement.findAll({ where: { participant: 'schuepbach' } })
-            .then(f => EventService.createEventAndNotify(f, 'schuepbach')
-        );
-
-
     }
 }
 
