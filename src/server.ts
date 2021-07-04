@@ -12,6 +12,8 @@ import { Event } from './models/event.model';
 import { NotificationService } from './services/notification.service';
 import { AverageService } from './services/average.service';
 import { EventService } from './services/event.service';
+import { Token } from './models/token.model';
+import { TokenService } from './services/token.service';
 
 export class Server {
 
@@ -31,13 +33,19 @@ export class Server {
             new OverviewController(),
             new EventController()
         ]);
-        this._storage = new StorageService([Measurement.initialize, User.initialize, Session.initialize, Event.initialize]);
+        this._storage = new StorageService([
+            Measurement.initialize,
+            User.initialize,
+            Session.initialize,
+            Event.initialize,
+            Token.initialize
+        ]);
 
         this._server.listen(this._port, () => console.log(`server listening at http://localhost:${this._port}`));
 
         console.log('sending message');
         // NotificationService.send({message: 'Hallo\n Welt', number: '0786447590', flash: false});
-
+       
 
     }
 }

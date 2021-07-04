@@ -9,7 +9,6 @@ export class AverageService {
 
 
     average(all: MeasurementAttributes[]): { avgUsage: number, stde: number } {
-        console.log(this.duration, this.granularity, this.window);
         const max = this.max(all, d => d.timestamp);
         const currentInterval = this.getInterval(max) - 1;
         const relevantData = all

@@ -8,6 +8,7 @@ import { SessionAttributes } from '../models/session.model';
 import { Session } from '../models/session.model';
 import { verifyToken } from '../middlewares/checkAuth';
 import { TokenService } from '../services/token.service';
+import { Token } from '../models/token.model';
 
 export class UserController implements ControllerFactory {
 
@@ -22,6 +23,7 @@ export class UserController implements ControllerFactory {
         this.session();
         this.mailExists();
         this.getProfile();
+        this.token();
     }
 
     public getPathAndRouter(): ControllersObject {
@@ -75,7 +77,6 @@ export class UserController implements ControllerFactory {
             const session = req.body.tokenPayload;
             Session.findOne(session.sessionId)
                 .then(s => {
-                    console.log(s);
                     s.duration = Date.now();
                     s.save();
                     res.status(200).send();
@@ -109,6 +110,17 @@ export class UserController implements ControllerFactory {
                     console.log(err);
                     res.status(500).send();
                 });
+        });
+    }
+
+    public token() {
+        this._router.get('/token/:tokenId', (req, res) => {
+            Token.findByPk(req.params.tokenId)
+            .then(f => res.status(200).send(f))
+            .catch(err => {
+                console.log(err);
+                res.status(500).send();
+            });
         });
     }
 

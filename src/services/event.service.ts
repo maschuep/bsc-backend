@@ -1,4 +1,4 @@
-import { Measurement, MeasurementAttributes } from '../models/measurement.model';
+import {  MeasurementAttributes } from '../models/measurement.model';
 import { AverageService } from './average.service';
 import { Event } from '../models/event.model';
 import { User } from '../models/user.model';
@@ -11,7 +11,8 @@ export class EventService {
 
 
     static createEventAndNotify(all: MeasurementAttributes[], participant: string) {
-        const msg = 'Hallo, Sie hatten kuerzlich einen erhoehten Stromverbrauch. Sie koennen mit dem Link in der Begleitnachricht erfassen was Sie gemacht haben.';
+        const msg = 'Hallo, Sie hatten vor kurzem einen erhoehten Stromverbrauch. Sie koennen mit dem Link in der Begleitnachricht erfassen was Sie gemacht haben.';
+        const shortMsg = 'Klicken Sie hier um den erhöhten Stromverbrauch zu messen:\n';
         const sensitivity = Number.parseInt(process.env.EVENT_SENSITIVITY, 10);
 
 
@@ -19,12 +20,12 @@ export class EventService {
         const backofftimeSMS = Number.parseInt(process.env.SMS_BACKOFF, 10);
 
 
-
         Event.findAll({ where: { participant: participant } })
             .then(f => {
 
                 const avgservice = new AverageService();
 
+                
 
                 const latestEvent = avgservice.max(f, d => d.timestamp);
 
@@ -33,35 +34,42 @@ export class EventService {
                 const deviation = usage - stats.avgUsage;
                 const deviationAndStde = deviation - sensitivity * stats.stde;
 
-                console.log(stats, usage);
-                console.log('abw:', deviation, deviationAndStde);
 
-                if (latestEvent < Date.now() - backofftimeEvent && deviationAndStde > 0) {
 
-                    console.log('zägg====================================================================================');
+                if (latestEvent < Date.now() - backofftimeEvent && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
+
                     const max = avgservice.max(all, d => d.timestamp);
-                    Event.create({ timestamp: max, participant: participant } as any);
+                    Event.create({
+                        timestamp: max,
+                        participant: participant,
+                        average: stats.avgUsage,
+                        usage: usage,
+                        deviation: stats.stde
+                    } as any);
 
                     User.findAll({ where: { participant: participant } })
                         .then(users => {
                             const timer = 12000;
                             let count = 1;
+
                             users.forEach(u => {
 
-                                if (u.lastNotification < Date.now() - backofftimeSMS) {
+                                if (/*u.active &&*/ u.lastNotification < Date.now() - backofftimeSMS) {
                                     u.lastNotification = Date.now();
                                     u.save();
 
                                     // send link Session
+                                    // problem is the sending, because the encoding changes
                                     Session.create({ timestamp: Date.now(), userId: u.userId })
                                         .then(session => {
-                                            const token = TokenService.create({
+                                            const tokenId = TokenService.createSmsToken({
                                                 mail: u.mail,
                                                 participant: u.participant,
                                                 session,
                                                 userId: u.userId
                                             });
                                             setTimeout(() => {
+                                                
                                                 NotificationService.send({
                                                     message: `${msg}`,
                                                     number: u.phone,
@@ -71,7 +79,7 @@ export class EventService {
                                             setTimeout(() => {
 
                                                 NotificationService.send({
-                                                    message: `https://strom.maschuep.ch/events?token=${token}`,
+                                                    message: `${shortMsg}https://strom.maschuep.ch/token/${tokenId}`,
                                                     number: u.phone,
                                                     flash: false
                                                 });
