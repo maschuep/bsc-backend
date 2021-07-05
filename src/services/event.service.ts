@@ -12,7 +12,7 @@ export class EventService {
 
     static createEventAndNotify(all: MeasurementAttributes[], participant: string) {
         const msg = 'Hallo, Sie hatten vor kurzem einen erhoehten Stromverbrauch. Sie koennen mit dem Link in der Begleitnachricht erfassen was Sie gemacht haben.';
-        const shortMsg = 'Klicken Sie hier um den erhöhten Stromverbrauch zu messen:\n';
+        const shortMsg = 'Hier Klicken und ohne einzuloggen Stromverbrauch erfassen:\n';
         const sensitivity = Number.parseInt(process.env.EVENT_SENSITIVITY, 10);
 
 
