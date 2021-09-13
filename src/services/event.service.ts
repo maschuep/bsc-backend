@@ -34,7 +34,7 @@ export class EventService {
                 const deviation = usage - stats.avgUsage;
                 const deviationAndStde = deviation - sensitivity * stats.stde;
 
-
+                console.log(`stats: ${stats} | usage: ${usage}`)
 
                 if (latestEvent < Date.now() - backofftimeEvent && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
 
