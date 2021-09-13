@@ -7,7 +7,7 @@ export class SessionService {
             .then(s => {
                 s.timestamp = s.timestamp ? s.timestamp : Date.now();
                 s.duration = Date.now();
-                s.update(s)
+                s.save();
             })
             .catch(err => {
                 console.log(err);
