@@ -11,7 +11,7 @@ export class EventService {
 
 
     static createEventAndNotify(all: MeasurementAttributes[], participant: string) {
-        const msg = 'Sie haben kürzlich mehr Strom verbraucht {}kWh. Sie koennen mithilfe der Begleitnachricht erfassen was Sie gemacht haben.';
+        const msg = 'Sie haben vor kurzem mehr Strom ({} kWh) verbraucht. Sie koennen mithilfe der Begleitnachricht erfassen was Sie gemacht haben.';
         const shortMsg = 'Hier klicken und den Stromverbrauch erfassen:\n';
         const sensitivity = Number.parseInt(process.env.EVENT_SENSITIVITY, 10);
 
@@ -34,7 +34,7 @@ export class EventService {
                 const deviation = usage - stats.avgUsage;
                 const deviationAndStde = deviation - sensitivity * stats.stde;
 
-                console.log(`==== stats: ${stats} | usage: ${usage} ====`)
+                console.log(`= avg: ${stats.avgUsage}, stde:${ stats.stde} | usage: ${usage} =`)
 
                 if (latestEvent < Date.now() - backofftimeEvent && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
 
@@ -71,7 +71,7 @@ export class EventService {
                                             setTimeout(() => {
                                                 
                                                 NotificationService.send({
-                                                    message: `${msg.replace('{}', '' + Math.round(usage))}`,
+                                                    message: `${msg.replace('{}', '' + Math.round(usage / 1000))}`,
                                                     number: u.phone,
                                                     flash: true
                                                 });
