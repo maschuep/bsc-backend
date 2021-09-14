@@ -71,7 +71,7 @@ export class EventService {
                                             setTimeout(() => {
                                                 
                                                 NotificationService.send({
-                                                    message: `${msg.replace('{}', '' + Math.round(usage / 1000))}`,
+                                                    message: `${msg.replace('{}', '' + Math.round((usage - stats.avgUsage) / 10) / 100) }`,
                                                     number: u.phone,
                                                     flash: true
                                                 });
