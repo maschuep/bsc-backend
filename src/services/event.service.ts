@@ -1,4 +1,4 @@
-import {  MeasurementAttributes } from '../models/measurement.model';
+import { MeasurementAttributes } from '../models/measurement.model';
 import { AverageService } from './average.service';
 import { Event } from '../models/event.model';
 import { User } from '../models/user.model';
@@ -11,7 +11,7 @@ export class EventService {
 
 
     static createEventAndNotify(all: MeasurementAttributes[], participant: string) {
-        const msg = 'Sie haben vor kurzem mehr Strom ({} kWh) verbraucht. Sie koennen mithilfe der Begleitnachricht erfassen was Sie gemacht haben.';
+        const msg = 'Sie haben vor kurzem mehr Strom ({} Wh) verbraucht. Sie koennen mithilfe der Begleitnachricht erfassen was Sie gemacht haben.';
         const shortMsg = 'Hier klicken und den Stromverbrauch erfassen:\n';
         const sensitivity = Number.parseInt(process.env.EVENT_SENSITIVITY, 10);
 
@@ -25,7 +25,7 @@ export class EventService {
 
                 const avgservice = new AverageService();
 
-                
+
 
                 const latestEvent = avgservice.max(f, d => d.timestamp);
 
@@ -34,7 +34,7 @@ export class EventService {
                 const deviation = usage - stats.avgUsage;
                 const deviationAndStde = deviation - sensitivity * stats.stde;
 
-                console.log(`= avg: ${stats.avgUsage}, stde:${ stats.stde} | usage: ${usage} =`)
+                console.log(`= avg: ${stats.avgUsage}, stde:${stats.stde} | usage: ${usage} =`);
 
                 if (latestEvent < Date.now() - backofftimeEvent && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
 
@@ -54,9 +54,9 @@ export class EventService {
 
                             users.forEach(u => {
 
-                                if (/*u.active &&*/ u.lastNotification < Date.now() - backofftimeSMS) {
+                                if (u.active && u.lastNotification < Date.now() - backofftimeSMS) {
                                     u.lastNotification = Date.now();
-                                    u.update(u)
+                                    u.update(u);
 
                                     // send link Session
                                     // problem is the sending, because the encoding changes
@@ -69,9 +69,9 @@ export class EventService {
                                                 userId: u.userId
                                             });
                                             setTimeout(() => {
-                                                
+
                                                 NotificationService.send({
-                                                    message: `${msg.replace('{}', '' + Math.round((usage - stats.avgUsage) / 10) / 100) }`,
+                                                    message: `${msg.replace('{}', '' + (usage - stats.avgUsage))}`,
                                                     number: u.phone,
                                                     flash: true
                                                 });

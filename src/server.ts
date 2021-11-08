@@ -45,7 +45,7 @@ export class Server {
 
         console.log('sending message');
         // NotificationService.send({message: 'Hallo\n Welt', number: '0786447590', flash: false});
-       
+
 
     }
 }
