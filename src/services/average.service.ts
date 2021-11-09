@@ -53,8 +53,12 @@ export class AverageService {
         return ts - (ts % this.duration) - this.duration;
     }
 
-    max<T>(data: T[], fn: (d: T) => number) {
+    max<T>(data: T[], fn: (d: T) => number): number {
         return data.reduce((acc, curr) => acc = acc < fn(curr) ? fn(curr) : acc, 0);
+    }
+
+    maxElement<T>(data: T[], fn: (d: T) => number): T {
+        return data.reduce((acc, curr) => acc = fn(acc) < fn(curr) ? curr : acc, data[0]);
     }
 
     min<T>(data: T[], fn: (d: T) => number) {

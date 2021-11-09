@@ -25,18 +25,18 @@ export class EventService {
 
                 const avgservice = new AverageService();
 
-
-
                 const latestEvent = avgservice.max(f, d => d.timestamp);
 
                 const usage = avgservice.getUsage(all);
                 const stats = avgservice.average(all);
                 const deviation = usage - stats.avgUsage;
                 const deviationAndStde = deviation - sensitivity * stats.stde;
+                const offsetEvent = 60000;
 
                 console.log(`= avg: ${stats.avgUsage}, stde:${stats.stde} | usage: ${usage} =`);
 
-                if (latestEvent < Date.now() - backofftimeEvent && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
+                if (latestEvent < Date.now() - (backofftimeEvent + offsetEvent)
+                    && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
 
                     const max = avgservice.max(all, d => d.timestamp);
                     Event.create({
@@ -71,7 +71,7 @@ export class EventService {
                                             setTimeout(() => {
 
                                                 NotificationService.send({
-                                                    message: `${msg.replace('{}', '' + (usage - stats.avgUsage))}`,
+                                                    message: `${msg.replace('{}', '' + Math.round(usage - stats.avgUsage))}`,
                                                     number: u.phone,
                                                     flash: true
                                                 });
