@@ -10,7 +10,6 @@ export function verifyToken(req: Request, res: Response, next: any) {
         token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, secret);
         if (decoded == null) {
-            console.log(token);
             res.status(403).send({ message: 'Unauthorized' });
         }
         // adds the field "tokenPayload" to the request enabling following functions to use data from the token

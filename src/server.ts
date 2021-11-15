@@ -43,7 +43,6 @@ export class Server {
 
         this._server.listen(this._port, () => console.log(`server listening at http://localhost:${this._port}`));
 
-        console.log('sending message');
         // NotificationService.send({message: 'Hallo\n Welt', number: '0786447590', flash: false});
 
 

@@ -33,7 +33,6 @@ export class EventService {
                 const deviationAndStde = deviation - sensitivity * stats.stde;
                 const offsetEvent = 60000;
 
-                console.log(`= avg: ${stats.avgUsage}, stde:${stats.stde} | usage: ${usage} =`);
 
                 if (latestEvent < Date.now() - (backofftimeEvent + offsetEvent)
                     && usage > sensitivity * stats.avgUsage && deviationAndStde > 0) {
@@ -60,7 +59,7 @@ export class EventService {
 
                                     // send link Session
                                     // problem is the sending, because the encoding changes
-                                    Session.create({ timestamp: Date.now(), userId: u.userId })
+                                    Session.create({ userId: u.userId })
                                         .then(session => {
                                             const tokenId = TokenService.createSmsToken({
                                                 mail: u.mail,

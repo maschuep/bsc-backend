@@ -8,7 +8,7 @@ export interface SessionAttributes {
 }
 
 export class Session
-extends Model<SessionAttributes, Optional<SessionAttributes, 'sessionId' | 'duration'>>
+extends Model<SessionAttributes, Optional<SessionAttributes, 'sessionId' | 'duration' | 'timestamp'>>
 implements SessionAttributes {
     sessionId: number;
     userId: number;
