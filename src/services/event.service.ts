@@ -51,7 +51,9 @@ export class EventService {
                             const timer = 12000;
                             let count = 1;
 
-                            users.forEach(u => {
+                            users
+                            .filter(u => u.phone ? u.phone !== '+41undefined' : false )
+                            .forEach(u => {
 
                                 if (u.active && u.lastNotification < Date.now() - backofftimeSMS) {
                                     u.lastNotification = Date.now();
